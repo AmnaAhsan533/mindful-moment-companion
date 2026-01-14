@@ -14,7 +14,216 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      care_plans: {
+        Row: {
+          created_at: string
+          description: string | null
+          generated_at: string
+          id: string
+          is_active: boolean | null
+          session_summary_id: string | null
+          tasks: Json
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          generated_at?: string
+          id?: string
+          is_active?: boolean | null
+          session_summary_id?: string | null
+          tasks?: Json
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          generated_at?: string
+          id?: string
+          is_active?: boolean | null
+          session_summary_id?: string | null
+          tasks?: Json
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "care_plans_session_summary_id_fkey"
+            columns: ["session_summary_id"]
+            isOneToOne: false
+            referencedRelation: "session_summaries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      care_task_completions: {
+        Row: {
+          care_plan_id: string | null
+          completed_at: string
+          id: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          care_plan_id?: string | null
+          completed_at?: string
+          id?: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          care_plan_id?: string | null
+          completed_at?: string
+          id?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "care_task_completions_care_plan_id_fkey"
+            columns: ["care_plan_id"]
+            isOneToOne: false
+            referencedRelation: "care_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mood_entries: {
+        Row: {
+          created_at: string
+          id: string
+          logged_at: string
+          mood_score: number
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logged_at?: string
+          mood_score: number
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logged_at?: string
+          mood_score?: number
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          notification_preferences: Json | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          notification_preferences?: Json | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          notification_preferences?: Json | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reminders: {
+        Row: {
+          care_plan_id: string | null
+          channel: string
+          created_at: string
+          id: string
+          message: string | null
+          scheduled_at: string
+          sent_at: string | null
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          care_plan_id?: string | null
+          channel?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          scheduled_at: string
+          sent_at?: string | null
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          care_plan_id?: string | null
+          channel?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          scheduled_at?: string
+          sent_at?: string | null
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminders_care_plan_id_fkey"
+            columns: ["care_plan_id"]
+            isOneToOne: false
+            referencedRelation: "care_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_summaries: {
+        Row: {
+          created_at: string
+          id: string
+          key_takeaways: string[] | null
+          provider_name: string | null
+          session_date: string
+          summary: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key_takeaways?: string[] | null
+          provider_name?: string | null
+          session_date: string
+          summary: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key_takeaways?: string[] | null
+          provider_name?: string | null
+          session_date?: string
+          summary?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
