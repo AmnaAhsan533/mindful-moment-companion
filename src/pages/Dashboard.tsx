@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Header } from "@/components/Header";
 import { MoodCheckIn } from "@/components/MoodCheckIn";
 import { CareTasks } from "@/components/CareTasks";
@@ -7,22 +6,7 @@ import { CrisisResources } from "@/components/CrisisResources";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarDays, Heart, LineChart, Phone } from "lucide-react";
 
-interface MoodEntry {
-  mood: number;
-  note: string;
-  timestamp: Date;
-}
-
 export default function Dashboard() {
-  const [moodHistory, setMoodHistory] = useState<MoodEntry[]>([]);
-
-  const handleMoodLogged = (mood: number, note: string) => {
-    setMoodHistory(prev => [
-      { mood, note, timestamp: new Date() },
-      ...prev,
-    ]);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -58,7 +42,7 @@ export default function Dashboard() {
             </TabsList>
             
             <TabsContent value="checkin">
-              <MoodCheckIn onMoodLogged={handleMoodLogged} />
+              <MoodCheckIn />
             </TabsContent>
             <TabsContent value="tasks">
               <CareTasks />
@@ -75,7 +59,7 @@ export default function Dashboard() {
         {/* Desktop grid layout */}
         <div className="hidden lg:grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <MoodCheckIn onMoodLogged={handleMoodLogged} />
+            <MoodCheckIn />
             <MoodChart />
           </div>
           <div className="space-y-6">
