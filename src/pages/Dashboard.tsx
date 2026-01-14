@@ -38,7 +38,7 @@ export default function Dashboard() {
         {/* Mobile tabs for smaller screens */}
         <div className="lg:hidden">
           <Tabs defaultValue="checkin" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-6">
+            <TabsList className="grid w-full grid-cols-4 mb-6 h-auto p-2">
               <TabsTrigger value="checkin" className="flex flex-col items-center gap-1 py-2">
                 <Heart className="h-4 w-4" />
                 <span className="text-xs">Check-in</span>
