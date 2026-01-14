@@ -1,59 +1,11 @@
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-interface CareTask {
-  id: string;
-  title: string;
-  description: string;
-  category: "medication" | "exercise" | "mindfulness" | "social" | "therapy";
-  completed: boolean;
-  time?: string;
-}
-
-const initialTasks: CareTask[] = [
-  {
-    id: "1",
-    title: "Morning Meditation",
-    description: "10-minute guided breathing exercise",
-    category: "mindfulness",
-    completed: false,
-    time: "8:00 AM",
-  },
-  {
-    id: "2",
-    title: "Take Medication",
-    description: "Daily prescribed medication",
-    category: "medication",
-    completed: false,
-    time: "9:00 AM",
-  },
-  {
-    id: "3",
-    title: "30-min Walk",
-    description: "Light outdoor exercise as recommended",
-    category: "exercise",
-    completed: false,
-    time: "12:00 PM",
-  },
-  {
-    id: "4",
-    title: "Journal Entry",
-    description: "Write about your day and feelings",
-    category: "therapy",
-    completed: false,
-    time: "8:00 PM",
-  },
-  {
-    id: "5",
-    title: "Call a Friend",
-    description: "Connect with someone you trust",
-    category: "social",
-    completed: false,
-  },
-];
+import { useCarePlan } from "@/hooks/useCarePlan";
+import { Loader2, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const categoryConfig = {
   medication: { label: "Medication", className: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300" },
@@ -64,18 +16,41 @@ const categoryConfig = {
 };
 
 export function CareTasks() {
-  const [tasks, setTasks] = useState<CareTask[]>(initialTasks);
+  const { carePlan, loading, toggleTaskCompletion, isTaskCompleted, completions } = useCarePlan();
 
-  const toggleTask = (taskId: string) => {
-    setTasks(prev =>
-      prev.map(task =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      )
+  if (loading) {
+    return (
+      <Card className="shadow-lg border-border/50">
+        <CardContent className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </CardContent>
+      </Card>
     );
-  };
+  }
 
-  const completedCount = tasks.filter(t => t.completed).length;
-  const progressPercent = Math.round((completedCount / tasks.length) * 100);
+  if (!carePlan) {
+    return (
+      <Card className="shadow-lg border-border/50">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl font-semibold flex items-center gap-2">
+            <span className="text-2xl">📋</span>
+            Today's Care Plan
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="text-center py-8">
+          <Sparkles className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+          <p className="text-muted-foreground mb-4">No care plan yet</p>
+          <Button asChild variant="hero">
+            <Link to="/care-plan">Generate Care Plan</Link>
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const tasks = carePlan.tasks || [];
+  const completedCount = completions.length;
+  const progressPercent = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
 
   return (
     <Card className="shadow-lg border-border/50">
@@ -97,47 +72,38 @@ export function CareTasks() {
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        {tasks.map((task) => (
-          <div
-            key={task.id}
-            className={cn(
-              "flex items-start gap-3 p-3 rounded-lg border transition-all duration-200",
-              task.completed
-                ? "bg-muted/50 border-muted"
-                : "bg-card border-border hover:border-primary/50 hover:shadow-sm"
-            )}
-          >
-            <Checkbox
-              checked={task.completed}
-              onCheckedChange={() => toggleTask(task.id)}
-              className="mt-1"
-            />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span
-                  className={cn(
-                    "font-medium transition-all",
-                    task.completed && "line-through text-muted-foreground"
-                  )}
-                >
-                  {task.title}
-                </span>
-                <Badge className={cn("text-xs", categoryConfig[task.category].className)}>
-                  {categoryConfig[task.category].label}
-                </Badge>
-              </div>
-              <p className={cn(
-                "text-sm mt-1",
-                task.completed ? "text-muted-foreground" : "text-muted-foreground"
-              )}>
-                {task.description}
-              </p>
-              {task.time && (
-                <p className="text-xs text-muted-foreground mt-1">⏰ {task.time}</p>
+        {tasks.map((task) => {
+          const completed = isTaskCompleted(task.id);
+          return (
+            <div
+              key={task.id}
+              className={cn(
+                "flex items-start gap-3 p-3 rounded-lg border transition-all duration-200",
+                completed
+                  ? "bg-muted/50 border-muted"
+                  : "bg-card border-border hover:border-primary/50 hover:shadow-sm"
               )}
+            >
+              <Checkbox
+                checked={completed}
+                onCheckedChange={() => toggleTaskCompletion(task.id)}
+                className="mt-1"
+              />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={cn("font-medium transition-all", completed && "line-through text-muted-foreground")}>
+                    {task.title}
+                  </span>
+                  <Badge className={cn("text-xs", categoryConfig[task.category]?.className)}>
+                    {categoryConfig[task.category]?.label || task.category}
+                  </Badge>
+                </div>
+                <p className="text-sm mt-1 text-muted-foreground">{task.description}</p>
+                {task.time && <p className="text-xs text-muted-foreground mt-1">⏰ {task.time}</p>}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </CardContent>
     </Card>
   );

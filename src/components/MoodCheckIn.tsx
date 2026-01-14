@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
+import { useMoodEntries } from "@/hooks/useMoodEntries";
 
 const moods = [
   { emoji: "😊", label: "Great", value: 5 },
@@ -12,11 +13,8 @@ const moods = [
   { emoji: "😢", label: "Struggling", value: 1 },
 ];
 
-interface MoodCheckInProps {
-  onMoodLogged?: (mood: number, note: string) => void;
-}
-
-export function MoodCheckIn({ onMoodLogged }: MoodCheckInProps) {
+export function MoodCheckIn() {
+  const { logMood } = useMoodEntries();
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
   const [note, setNote] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,20 +23,23 @@ export function MoodCheckIn({ onMoodLogged }: MoodCheckInProps) {
     if (selectedMood === null) return;
     
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    onMoodLogged?.(selectedMood, note);
-    
-    toast({
-      title: "Mood logged ✨",
-      description: "Great job checking in today! Keep it up.",
-    });
-    
-    setSelectedMood(null);
-    setNote("");
+    const { error } = await logMood(selectedMood, note);
     setIsSubmitting(false);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log mood. Please try again.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Mood logged ✨",
+        description: "Great job checking in today!",
+      });
+      setSelectedMood(null);
+      setNote("");
+    }
   };
 
   return (
@@ -54,21 +55,16 @@ export function MoodCheckIn({ onMoodLogged }: MoodCheckInProps) {
           {moods.map((mood) => (
             <Button
               key={mood.value}
-              variant={selectedMood === mood.value ? "moodActive" : "mood"}
-              size="mood"
+              variant={selectedMood === mood.value ? "default" : "outline"}
+              size="lg"
               onClick={() => setSelectedMood(mood.value)}
-              className="flex flex-col items-center"
+              className="flex flex-col items-center h-auto py-3 px-4"
             >
               <span className="text-2xl">{mood.emoji}</span>
+              <span className="text-xs mt-1">{mood.label}</span>
             </Button>
           ))}
         </div>
-        
-        {selectedMood !== null && (
-          <p className="text-center text-sm text-muted-foreground">
-            You selected: <span className="font-medium text-foreground">{moods.find(m => m.value === selectedMood)?.label}</span>
-          </p>
-        )}
         
         <Textarea
           placeholder="Add a note about how you're feeling... (optional)"
