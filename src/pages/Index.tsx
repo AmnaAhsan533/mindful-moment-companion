@@ -11,44 +11,44 @@ import {
   Shield,
   ArrowRight,
 } from "lucide-react";
-import heroImage from "@/assets/hero-wellness.jpg";
+import heroIllustration from "@/assets/mental-health-illustration.png";
 
 const features = [
   {
     icon: Heart,
     title: "Daily Mood Tracking",
     description:
-      "Log your emotions with our simple, intuitive check-in system. Track patterns over time.",
+      "Log your emotions with our simple, intuitive check-in system.",
   },
   {
     icon: CalendarCheck,
     title: "Care Plan Tasks",
     description:
-      "Follow personalized self-care routines created from your therapy sessions.",
+      "Follow personalized self-care routines from your therapy sessions.",
   },
   {
     icon: LineChart,
     title: "Progress Insights",
     description:
-      "Visualize your emotional journey with charts that show trends and improvements.",
+      "Visualize your emotional journey with clear trends and patterns.",
   },
   {
     icon: Bell,
     title: "Gentle Reminders",
     description:
-      "Receive timely nudges via SMS or WhatsApp to stay on track with your care plan.",
+      "Receive timely nudges to stay on track with your wellness goals.",
   },
   {
     icon: MessageCircleHeart,
     title: "Self-Help Resources",
     description:
-      "Access curated content and exercises to support your mental wellness journey.",
+      "Access curated content to support your mental wellness journey.",
   },
   {
     icon: Shield,
     title: "Crisis Support",
     description:
-      "Quick access to crisis hotlines and resources when you need immediate help.",
+      "Quick access to crisis hotlines when you need immediate help.",
   },
 ];
 
@@ -57,63 +57,62 @@ export default function Index() {
     <div className="min-h-screen bg-background">
       <Header showDashboardLink />
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/80" />
-        
-        <div className="relative container mx-auto px-4 py-20 lg:py-32">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-              <Heart className="h-4 w-4" />
-              Supporting your wellness journey
-            </div>
+      {/* Hero Section - Minimalist Split Layout */}
+      <section className="container mx-auto px-4 py-16 lg:py-24">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left Content */}
+          <div className="order-2 lg:order-1">
+            <span className="inline-block text-sm font-medium text-primary mb-4">
+              Mental Wellness Companion
+            </span>
             
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-              Your Mental Health{" "}
-              <span className="text-primary">Companion</span>{" "}
-              Between Sessions
+            <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight tracking-tight">
+              Nurture Your Mind,{" "}
+              <span className="text-primary">One Day at a Time</span>
             </h1>
             
-            <p className="text-lg text-muted-foreground mb-8 max-w-xl">
-              Track your mood, follow your care plan, and access support resources —
-              all in one place. Stay engaged with your wellness journey between
-              therapy visits.
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              Track your mood, follow your care plan, and access support — 
+              all in one calm, focused space.
             </p>
             
             <div className="flex flex-wrap gap-4">
-              <Button asChild variant="hero" size="xl">
+              <Button asChild size="lg" className="rounded-full px-8">
                 <Link to="/dashboard">
-                  Start Your Check-In
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  Get Started
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="heroOutline" size="xl">
-                <Link to="/dashboard">Learn More</Link>
+              <Button asChild variant="outline" size="lg" className="rounded-full px-8">
+                <Link to="/auth">Learn More</Link>
               </Button>
             </div>
             
-            <p className="mt-6 text-sm text-muted-foreground">
+            <p className="mt-8 text-sm text-muted-foreground">
               🔒 Private & secure. Not a replacement for professional care.
             </p>
+          </div>
+
+          {/* Right Illustration */}
+          <div className="order-1 lg:order-2 flex justify-center">
+            <img 
+              src={heroIllustration} 
+              alt="Mental health illustration - person with flowers growing from mind" 
+              className="w-full max-w-md lg:max-w-lg"
+            />
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-muted/30">
+      {/* Features Section - Clean Grid */}
+      <section className="py-20 border-t border-border/40">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-              Everything You Need to{" "}
-              <span className="text-primary">Stay on Track</span>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-4">
+              Tools for Your <span className="text-primary">Wellness Journey</span>
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Designed with care to support your mental health journey between sessions
-              with your therapist or healthcare provider.
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Simple features designed to support your mental health between therapy sessions.
             </p>
           </div>
           
@@ -125,43 +124,36 @@ export default function Index() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20">
+      {/* CTA Section - Simple & Clean */}
+      <section className="py-20 border-t border-border/40">
         <div className="container mx-auto px-4">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-accent to-primary/5 p-8 lg:p-16">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/50 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-            
-            <div className="relative text-center max-w-2xl mx-auto">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-                Ready to Take Control of Your Wellness?
-              </h2>
-              <p className="text-muted-foreground mb-8">
-                Start tracking your mood and following your care plan today.
-                Your mental health matters, and we're here to support you.
-              </p>
-              <Button asChild variant="hero" size="xl">
-                <Link to="/dashboard">
-                  Get Started — It's Free
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold mb-4">
+              Ready to Start Your Journey?
+            </h2>
+            <p className="text-muted-foreground mb-8">
+              Begin tracking your mood and following your care plan today.
+            </p>
+            <Button asChild size="lg" className="rounded-full px-10">
+              <Link to="/dashboard">
+                Start Free
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-8">
+      {/* Footer - Minimal */}
+      <footer className="border-t border-border/40 py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <Heart className="h-5 w-5 text-primary" />
-              <span className="font-semibold">MindCare Companion</span>
+              <Heart className="h-4 w-4 text-primary" />
+              <span className="font-medium text-sm">MindCare Companion</span>
             </div>
-            <p className="text-sm text-muted-foreground text-center">
+            <p className="text-xs text-muted-foreground text-center max-w-md">
               This tool supports wellness but is not a replacement for professional mental health care.
-              If you're in crisis, please contact a crisis hotline or emergency services.
             </p>
           </div>
         </div>

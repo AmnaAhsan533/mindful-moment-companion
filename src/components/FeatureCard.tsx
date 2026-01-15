@@ -9,13 +9,13 @@ interface FeatureCardProps {
 
 export function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/30 bg-card/50 backdrop-blur-sm">
-      <CardContent className="pt-6">
-        <div className="mb-4 inline-flex p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-          <Icon className="h-6 w-6" />
+    <Card className="group border-0 shadow-none bg-transparent hover:bg-card/50 transition-colors duration-200">
+      <CardContent className="pt-6 px-4">
+        <div className="mb-3 inline-flex p-2.5 rounded-lg bg-primary/10 text-primary">
+          <Icon className="h-5 w-5" />
         </div>
-        <h3 className="text-lg font-semibold mb-2">{title}</h3>
-        <p className="text-muted-foreground text-sm">{description}</p>
+        <h3 className="text-base font-semibold mb-1.5">{title}</h3>
+        <p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
       </CardContent>
     </Card>
   );
