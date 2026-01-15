@@ -1,8 +1,16 @@
-import { Heart, LogOut, Sparkles, Calendar } from "lucide-react";
+import { Heart, LogOut, Sparkles, Calendar, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { useState } from "react";
 
 interface HeaderProps {
   showDashboardLink?: boolean;
@@ -12,13 +20,96 @@ export function Header({ showDashboardLink = false }: HeaderProps) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [open, setOpen] = useState(false);
 
   const handleSignOut = async () => {
+    setOpen(false);
     await signOut();
     navigate("/");
   };
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleNavClick = () => setOpen(false);
+
+  const NavItems = ({ mobile = false }: { mobile?: boolean }) => {
+    if (!user) {
+      if (showDashboardLink) {
+        return (
+          <Button asChild variant="hero" size="sm" onClick={handleNavClick}>
+            <Link to="/auth">Get Started</Link>
+          </Button>
+        );
+      }
+      return (
+        <>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            asChild
+            className={cn(isActive("/") && "bg-accent text-accent-foreground")}
+            onClick={handleNavClick}
+          >
+            <Link to="/">Home</Link>
+          </Button>
+          <Button variant="hero" size="sm" asChild onClick={handleNavClick}>
+            <Link to="/auth">Sign In</Link>
+          </Button>
+        </>
+      );
+    }
+
+    return (
+      <div className={cn(mobile ? "flex flex-col gap-2" : "flex items-center gap-2")}>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          asChild
+          className={cn(
+            isActive("/dashboard") && "bg-accent text-accent-foreground",
+            mobile && "justify-start"
+          )}
+          onClick={handleNavClick}
+        >
+          <Link to="/dashboard">Dashboard</Link>
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          asChild
+          className={cn(
+            isActive("/care-plan") && "bg-accent text-accent-foreground",
+            mobile && "justify-start"
+          )}
+          onClick={handleNavClick}
+        >
+          <Link to="/care-plan" className="flex items-center gap-1">
+            <Sparkles className="h-4 w-4" />
+            <span>Care Plan</span>
+          </Link>
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          asChild
+          className={cn(
+            isActive("/sessions") && "bg-accent text-accent-foreground",
+            mobile && "justify-start"
+          )}
+          onClick={handleNavClick}
+        >
+          <Link to="/sessions" className="flex items-center gap-1">
+            <Calendar className="h-4 w-4" />
+            <span>Sessions</span>
+          </Link>
+        </Button>
+        <Button variant="ghost" size="sm" onClick={handleSignOut} className={cn(mobile && "justify-start")}>
+          <LogOut className="h-4 w-4 mr-1" />
+          <span>Sign Out</span>
+        </Button>
+      </div>
+    );
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
@@ -32,64 +123,31 @@ export function Header({ showDashboardLink = false }: HeaderProps) {
           </span>
         </Link>
         
-        <nav className="flex items-center gap-2">
-          {user ? (
-            <>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                asChild
-                className={cn(isActive("/dashboard") && "bg-accent text-accent-foreground")}
-              >
-                <Link to="/dashboard">Dashboard</Link>
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                asChild
-                className={cn(isActive("/care-plan") && "bg-accent text-accent-foreground")}
-              >
-                <Link to="/care-plan" className="flex items-center gap-1">
-                  <Sparkles className="h-4 w-4" />
-                  <span className="hidden sm:inline">Care Plan</span>
-                </Link>
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                asChild
-                className={cn(isActive("/sessions") && "bg-accent text-accent-foreground")}
-              >
-                <Link to="/sessions" className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  <span className="hidden sm:inline">Sessions</span>
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                <LogOut className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Sign Out</span>
-              </Button>
-            </>
-          ) : showDashboardLink ? (
-            <Button asChild variant="hero" size="sm">
-              <Link to="/auth">Get Started</Link>
-            </Button>
-          ) : (
-            <>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                asChild
-                className={cn(isActive("/") && "bg-accent text-accent-foreground")}
-              >
-                <Link to="/">Home</Link>
-              </Button>
-              <Button variant="hero" size="sm" asChild>
-                <Link to="/auth">Sign In</Link>
-              </Button>
-            </>
-          )}
+        {/* Desktop navigation */}
+        <nav className="hidden md:flex items-center gap-2">
+          <NavItems />
         </nav>
+
+        {/* Mobile hamburger menu */}
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild className="md:hidden">
+            <Button variant="ghost" size="icon">
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[280px]">
+            <SheetHeader>
+              <SheetTitle className="flex items-center gap-2">
+                <Heart className="h-5 w-5 text-primary" />
+                <span>MindCare</span>
+              </SheetTitle>
+            </SheetHeader>
+            <nav className="mt-6">
+              <NavItems mobile />
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
     </header>
   );
