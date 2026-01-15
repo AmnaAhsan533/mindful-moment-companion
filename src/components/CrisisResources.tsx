@@ -1,25 +1,32 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Phone, MessageCircle, ExternalLink } from "lucide-react";
+import { Phone, MessageCircle } from "lucide-react";
 
 const resources = [
   {
-    name: "988 Suicide & Crisis Lifeline",
-    description: "Free, 24/7 support for people in distress",
-    phone: "988",
-    sms: "988",
-    icon: "🆘",
+    name: "Umang Helpline",
+    description: "Mental health support and counseling services",
+    phone: "0311-7786264",
+    whatsapp: "923117786264",
+    icon: "💚",
   },
   {
-    name: "Crisis Text Line",
-    description: "Text HOME to 741741 for free crisis counseling",
-    sms: "741741",
-    icon: "💬",
+    name: "Taskeen",
+    description: "Free mental health support via WhatsApp",
+    phone: "0316-8275336",
+    whatsapp: "923168275336",
+    icon: "🤝",
   },
   {
-    name: "SAMHSA National Helpline",
-    description: "Treatment referrals and information",
-    phone: "1-800-662-4357",
+    name: "Rozan Counseling",
+    description: "Trauma, abuse, and emotional support services",
+    phone: "051-2890505",
+    icon: "🌸",
+  },
+  {
+    name: "Pakistan Mental Health Helpline",
+    description: "24/7 toll-free mental health support",
+    phone: "0800-22444",
     icon: "🏥",
   },
 ];
@@ -63,16 +70,20 @@ export function CrisisResources() {
                       </a>
                     </Button>
                   )}
-                  {resource.sms && (
+                  {resource.whatsapp && (
                     <Button
                       variant="outline"
                       size="sm"
                       asChild
                       className="gap-1"
                     >
-                      <a href={`sms:${resource.sms}`}>
+                      <a 
+                        href={`https://wa.me/${resource.whatsapp}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <MessageCircle className="h-3 w-3" />
-                        Text {resource.sms}
+                        WhatsApp
                       </a>
                     </Button>
                   )}
