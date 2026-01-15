@@ -57,50 +57,63 @@ export default function Index() {
     <div className="min-h-screen bg-background">
       <Header showDashboardLink />
 
-      {/* Hero Section - Minimalist Split Layout */}
-      <section className="container mx-auto px-4 py-16 lg:py-24">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Content */}
-          <div className="order-2 lg:order-1">
-            <span className="inline-block text-sm font-medium text-primary mb-4">
-              Mental Wellness Companion
-            </span>
-            
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight tracking-tight">
-              Nurture Your Mind,{" "}
-              <span className="text-primary">One Day at a Time</span>
-            </h1>
-            
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Track your mood, follow your care plan, and access support — 
-              all in one calm, focused space.
-            </p>
-            
-            <div className="flex flex-wrap gap-4">
-              <Button asChild size="lg" className="rounded-full px-8">
-                <Link to="/dashboard">
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full px-8">
-                <Link to="/auth">Learn More</Link>
-              </Button>
-            </div>
-            
-            <p className="mt-8 text-sm text-muted-foreground">
-              🔒 Private & secure. Not a replacement for professional care.
-            </p>
+      {/* Hero Section - Full Background with Centered Content */}
+      <section 
+        className="relative min-h-[90vh] flex items-center justify-center overflow-hidden"
+        style={{
+          backgroundImage: `url(${heroIllustration})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Animated overlay for flower effect */}
+        <div 
+          className="absolute inset-0 animate-[pulse_4s_ease-in-out_infinite]"
+          style={{
+            backgroundImage: `url(${heroIllustration})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.3,
+            filter: 'blur(8px)',
+          }}
+        />
+        
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px]" />
+        
+        {/* Centered Content */}
+        <div className="relative z-10 container mx-auto px-4 text-center max-w-3xl">
+          <span className="inline-block text-sm font-medium text-primary mb-4 animate-fade-in">
+            Mental Wellness Companion
+          </span>
+          
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight animate-fade-in">
+            Nurture Your Mind,{" "}
+            <span className="text-primary">One Day at a Time</span>
+          </h1>
+          
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed animate-fade-in">
+            Track your mood, follow your care plan, and access support — 
+            all in one calm, focused space.
+          </p>
+          
+          <div className="flex flex-wrap gap-4 justify-center animate-fade-in">
+            <Button asChild size="lg" className="rounded-full px-8">
+              <Link to="/dashboard">
+                Get Started
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="rounded-full px-8">
+              <Link to="/auth">Learn More</Link>
+            </Button>
           </div>
-
-          {/* Right Illustration */}
-          <div className="order-1 lg:order-2 flex justify-center">
-            <img 
-              src={heroIllustration} 
-              alt="Mental health illustration - person with flowers growing from mind" 
-              className="w-full max-w-md lg:max-w-lg"
-            />
-          </div>
+          
+          <p className="mt-8 text-sm text-muted-foreground animate-fade-in">
+            🔒 Private & secure. Not a replacement for professional care.
+          </p>
         </div>
       </section>
 
