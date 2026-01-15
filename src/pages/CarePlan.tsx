@@ -34,7 +34,6 @@ export default function CarePlanPage() {
     try {
       const { data, error } = await supabase.functions.invoke("generate-care-plan", {
         body: { 
-          userId: user.id,
           sessionNotes: sessionNotes || undefined
         },
       });

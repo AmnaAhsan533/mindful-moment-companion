@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { escape } from "https://deno.land/std@0.208.0/html/entities.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,7 +8,6 @@ const corsHeaders = {
 };
 
 interface ReminderRequest {
-  userId: string;
   type: "mood_checkin" | "care_tasks" | "custom";
   customMessage?: string;
 }
@@ -18,19 +18,51 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate the user via JWT
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(
+        JSON.stringify({ error: 'Missing or invalid authorization header' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    
+    // Create client with user's auth token
+    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await supabaseAuth.auth.getClaims(token);
+    
+    if (claimsError || !claimsData?.claims?.sub) {
+      console.error("Auth error:", claimsError);
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Get verified userId from JWT claims
+    const userId = claimsData.claims.sub;
+
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_API_KEY) {
       throw new Error("RESEND_API_KEY is not configured. Please add it to enable email reminders.");
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    // Use service role key for database operations
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { userId, type, customMessage }: ReminderRequest = await req.json();
+    // Parse request body - only type and customMessage, userId comes from JWT
+    const { type, customMessage }: ReminderRequest = await req.json();
 
-    if (!userId || !type) {
-      throw new Error("userId and type are required");
+    if (!type) {
+      throw new Error("type is required");
     }
 
     // Get user profile
@@ -46,7 +78,8 @@ serve(async (req) => {
 
     let subject = "";
     let htmlContent = "";
-    const userName = profile.full_name || "there";
+    // Escape user-controlled values to prevent HTML injection
+    const userName = escape(profile.full_name || "there");
 
     switch (type) {
       case "mood_checkin":
@@ -78,9 +111,13 @@ serve(async (req) => {
           .single();
 
         const tasks = carePlan?.tasks as Array<{ title: string; time?: string }> || [];
+        // Escape task titles and times to prevent HTML injection
         const taskList = tasks.map(t => 
-          `<li style="margin: 8px 0;">${t.title}${t.time ? ` - ${t.time}` : ''}</li>`
+          `<li style="margin: 8px 0;">${escape(t.title || "")}${t.time ? ` - ${escape(t.time)}` : ''}</li>`
         ).join("");
+
+        // Escape care plan title
+        const planTitle = escape(carePlan?.title || "Today's Care Tasks");
 
         subject = "Your daily care plan is ready 📋";
         htmlContent = `
@@ -88,7 +125,7 @@ serve(async (req) => {
             <h1 style="color: #7c3aed;">Good morning, ${userName}! 🌅</h1>
             <p>Here's your personalized care plan for today:</p>
             <div style="background: #f3f4f6; padding: 20px; border-radius: 12px; margin: 20px 0;">
-              <h2 style="margin-top: 0; color: #374151;">${carePlan?.title || "Today's Care Tasks"}</h2>
+              <h2 style="margin-top: 0; color: #374151;">${planTitle}</h2>
               <ul style="color: #374151;">
                 ${taskList || '<li>Check your app for your personalized tasks</li>'}
               </ul>
@@ -102,11 +139,13 @@ serve(async (req) => {
         break;
 
       case "custom":
+        // Escape custom message to prevent HTML injection
+        const safeCustomMessage = escape(customMessage || "Just a friendly reminder to take care of yourself today.");
         subject = "A message from MindfulCare 💜";
         htmlContent = `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <h1 style="color: #7c3aed;">Hi ${userName}!</h1>
-            <p>${customMessage || "Just a friendly reminder to take care of yourself today."}</p>
+            <p>${safeCustomMessage}</p>
             <p style="color: #9ca3af; font-size: 14px; margin-top: 30px;">
               With love, MindfulCare 💜
             </p>
