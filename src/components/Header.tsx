@@ -1,7 +1,8 @@
 import { Heart, LogOut, Sparkles, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   showDashboardLink?: boolean;
@@ -10,11 +11,14 @@ interface HeaderProps {
 export function Header({ showDashboardLink = false }: HeaderProps) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
   };
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
@@ -31,16 +35,31 @@ export function Header({ showDashboardLink = false }: HeaderProps) {
         <nav className="flex items-center gap-2">
           {user ? (
             <>
-              <Button variant="ghost" size="sm" asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                asChild
+                className={cn(isActive("/dashboard") && "bg-accent text-accent-foreground")}
+              >
                 <Link to="/dashboard">Dashboard</Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                asChild
+                className={cn(isActive("/care-plan") && "bg-accent text-accent-foreground")}
+              >
                 <Link to="/care-plan" className="flex items-center gap-1">
                   <Sparkles className="h-4 w-4" />
                   <span className="hidden sm:inline">Care Plan</span>
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                asChild
+                className={cn(isActive("/sessions") && "bg-accent text-accent-foreground")}
+              >
                 <Link to="/sessions" className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
                   <span className="hidden sm:inline">Sessions</span>
@@ -57,7 +76,12 @@ export function Header({ showDashboardLink = false }: HeaderProps) {
             </Button>
           ) : (
             <>
-              <Button variant="ghost" size="sm" asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                asChild
+                className={cn(isActive("/") && "bg-accent text-accent-foreground")}
+              >
                 <Link to="/">Home</Link>
               </Button>
               <Button variant="hero" size="sm" asChild>
