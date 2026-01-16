@@ -1,4 +1,4 @@
-import { Heart, LogOut, Sparkles, Calendar, Menu, Languages } from "lucide-react";
+import { Heart, LogOut, Sparkles, Calendar, Menu, Languages, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -92,6 +92,21 @@ export function Header({ showDashboardLink = false }: HeaderProps) {
           <Link to="/care-plan" className="flex items-center gap-1">
             <Sparkles className="h-4 w-4" />
             <span>{t.carePlan}</span>
+          </Link>
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          asChild
+          className={cn(
+            isActive("/support") && "bg-accent text-accent-foreground",
+            mobile && "justify-start"
+          )}
+          onClick={handleNavClick}
+        >
+          <Link to="/support" className="flex items-center gap-1">
+            <MessageCircle className="h-4 w-4" />
+            <span>{t.support}</span>
           </Link>
         </Button>
         <Button 
