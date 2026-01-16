@@ -8,6 +8,7 @@ interface Translations {
   dashboard: string;
   carePlan: string;
   sessions: string;
+  support: string;
   signIn: string;
   signOut: string;
   getStarted: string;
@@ -56,6 +57,7 @@ const translations: Record<Language, Translations> = {
     dashboard: "Dashboard",
     carePlan: "Care Plan",
     sessions: "Sessions",
+    support: "Support",
     signIn: "Sign In",
     signOut: "Sign Out",
     getStarted: "Get Started",
@@ -102,6 +104,7 @@ const translations: Record<Language, Translations> = {
     dashboard: "ڈیش بورڈ",
     carePlan: "نگہداشت منصوبہ",
     sessions: "سیشنز",
+    support: "سپورٹ",
     signIn: "سائن ان",
     signOut: "سائن آؤٹ",
     getStarted: "شروع کریں",
