@@ -4,20 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { useMoodEntries } from "@/hooks/useMoodEntries";
-
-const moods = [
-  { emoji: "😊", label: "Great", value: 5 },
-  { emoji: "🙂", label: "Good", value: 4 },
-  { emoji: "😐", label: "Okay", value: 3 },
-  { emoji: "😔", label: "Low", value: 2 },
-  { emoji: "😢", label: "Struggling", value: 1 },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 
 export function MoodCheckIn() {
   const { logMood } = useMoodEntries();
+  const { t, isRTL } = useLanguage();
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
   const [note, setNote] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const moods = [
+    { emoji: "😊", label: t.moodGreat, value: 5 },
+    { emoji: "🙂", label: t.moodGood, value: 4 },
+    { emoji: "😐", label: t.moodOkay, value: 3 },
+    { emoji: "😔", label: t.moodBad, value: 2 },
+    { emoji: "😢", label: t.moodAwful, value: 1 },
+  ];
 
   const handleSubmit = async () => {
     if (selectedMood === null) return;
@@ -34,8 +37,8 @@ export function MoodCheckIn() {
       });
     } else {
       toast({
-        title: "Mood logged ✨",
-        description: "Great job checking in today!",
+        title: t.moodLogged + " ✨",
+        description: t.moodLoggedDesc,
       });
       setSelectedMood(null);
       setNote("");
@@ -43,11 +46,11 @@ export function MoodCheckIn() {
   };
 
   return (
-    <Card className="shadow-lg border-border/50">
+    <Card className={cn("shadow-lg border-border/50", isRTL && "font-urdu")} dir={isRTL ? "rtl" : "ltr"}>
       <CardHeader className="pb-4">
         <CardTitle className="text-xl font-semibold flex items-center gap-2">
           <span className="text-2xl">🌸</span>
-          How are you feeling today?
+          {t.howAreYouFeeling}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -67,11 +70,12 @@ export function MoodCheckIn() {
         </div>
         
         <Textarea
-          placeholder="Add a note about how you're feeling... (optional)"
+          placeholder={t.addNote}
           value={note}
           onChange={(e) => setNote(e.target.value)}
           className="resize-none bg-background"
           rows={3}
+          dir={isRTL ? "rtl" : "ltr"}
         />
         
         <Button
@@ -81,7 +85,7 @@ export function MoodCheckIn() {
           variant="hero"
           size="lg"
         >
-          {isSubmitting ? "Logging..." : "Log Mood"}
+          {isSubmitting ? t.loading : t.logMood}
         </Button>
       </CardContent>
     </Card>

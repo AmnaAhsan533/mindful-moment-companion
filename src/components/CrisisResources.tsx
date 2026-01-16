@@ -1,46 +1,49 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Phone, MessageCircle } from "lucide-react";
-
-const resources = [
-  {
-    name: "Umang Helpline",
-    description: "Mental health support and counseling services",
-    phone: "0311-7786264",
-    whatsapp: "923117786264",
-    icon: "💚",
-  },
-  {
-    name: "Taskeen",
-    description: "Free mental health support via WhatsApp",
-    phone: "0316-8275336",
-    whatsapp: "923168275336",
-    icon: "🤝",
-  },
-  {
-    name: "Rozan Counseling",
-    description: "Trauma, abuse, and emotional support services",
-    phone: "051-2890505",
-    icon: "🌸",
-  },
-  {
-    name: "Pakistan Mental Health Helpline",
-    description: "24/7 toll-free mental health support",
-    phone: "0800-22444",
-    icon: "🏥",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 
 export function CrisisResources() {
+  const { t, isRTL } = useLanguage();
+
+  const resources = [
+    {
+      name: t.umangName,
+      description: t.umangDesc,
+      phone: "0311-7786264",
+      whatsapp: "923117786264",
+      icon: "💚",
+    },
+    {
+      name: t.taskeenName,
+      description: t.taskeenDesc,
+      phone: "0316-8275336",
+      whatsapp: "923168275336",
+      icon: "🤝",
+    },
+    {
+      name: t.rozanName,
+      description: t.rozanDesc,
+      phone: "051-2890505",
+      icon: "🌸",
+    },
+    {
+      name: t.pakistanHelplineName,
+      description: t.pakistanHelplineDesc,
+      phone: "0800-22444",
+      icon: "🏥",
+    },
+  ];
   return (
-    <Card className="shadow-lg border-destructive/20 bg-gradient-to-br from-card to-destructive/5">
+    <Card className={cn("shadow-lg border-destructive/20 bg-gradient-to-br from-card to-destructive/5", isRTL && "font-urdu")} dir={isRTL ? "rtl" : "ltr"}>
       <CardHeader className="pb-4">
         <CardTitle className="text-xl font-semibold flex items-center gap-2">
           <span className="text-2xl">🚨</span>
-          Crisis Resources
+          {t.crisisResources}
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          If you're in crisis or need immediate support, help is available 24/7.
+          {t.crisisDescription}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -66,7 +69,7 @@ export function CrisisResources() {
                     >
                       <a href={`tel:${resource.phone}`}>
                         <Phone className="h-3 w-3" />
-                        Call {resource.phone}
+                        {t.call} {resource.phone}
                       </a>
                     </Button>
                   )}
@@ -83,7 +86,7 @@ export function CrisisResources() {
                         rel="noopener noreferrer"
                       >
                         <MessageCircle className="h-3 w-3" />
-                        WhatsApp
+                        {t.whatsApp}
                       </a>
                     </Button>
                   )}
@@ -95,8 +98,7 @@ export function CrisisResources() {
         
         <div className="pt-2 border-t border-border">
           <p className="text-xs text-muted-foreground text-center">
-            Remember: This app supports your wellness journey but is not a replacement for professional care.
-            Always reach out to a mental health professional or emergency services if you're in crisis.
+            {t.crisisDisclaimer}
           </p>
         </div>
       </CardContent>
