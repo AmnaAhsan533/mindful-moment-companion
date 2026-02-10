@@ -13,6 +13,7 @@ import CarePlan from "./pages/CarePlan";
 import Sessions from "./pages/Sessions";
 import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
+import Breathing from "./pages/Breathing";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/care-plan" element={<ProtectedRoute><CarePlan /></ProtectedRoute>} />
               <Route path="/sessions" element={<ProtectedRoute><Sessions /></ProtectedRoute>} />
               <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
+              <Route path="/breathing" element={<ProtectedRoute><Breathing /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>

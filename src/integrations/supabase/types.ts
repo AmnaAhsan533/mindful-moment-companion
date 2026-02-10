@@ -117,6 +117,39 @@ export type Database = {
         }
         Relationships: []
       }
+      mood_insights: {
+        Row: {
+          analyzed_at: string
+          created_at: string
+          id: string
+          risk_level: string
+          suggestions: Json
+          summary: string
+          trend: string
+          user_id: string
+        }
+        Insert: {
+          analyzed_at?: string
+          created_at?: string
+          id?: string
+          risk_level?: string
+          suggestions?: Json
+          summary: string
+          trend: string
+          user_id: string
+        }
+        Update: {
+          analyzed_at?: string
+          created_at?: string
+          id?: string
+          risk_level?: string
+          suggestions?: Json
+          summary?: string
+          trend?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -124,6 +157,7 @@ export type Database = {
           full_name: string | null
           id: string
           notification_preferences: Json | null
+          onboarding_completed: boolean | null
           phone: string | null
           updated_at: string
         }
@@ -133,6 +167,7 @@ export type Database = {
           full_name?: string | null
           id: string
           notification_preferences?: Json | null
+          onboarding_completed?: boolean | null
           phone?: string | null
           updated_at?: string
         }
@@ -142,6 +177,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           notification_preferences?: Json | null
+          onboarding_completed?: boolean | null
           phone?: string | null
           updated_at?: string
         }
